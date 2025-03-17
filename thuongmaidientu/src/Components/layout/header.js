@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../Css/header.css";
 import {
   CgChevronDown,
@@ -9,14 +8,24 @@ import {
   CgShoppingCart,
 } from "react-icons/cg";
 import logo from "../../Assets/img/shopping.png";
+import { useCart } from "../../context/CartContext";
+import { products } from "../../data/products";
+
 export default function Header() {
-  //#endregion
-  //#region Dropdown
-  /*===========================thời gian hiển thị của dropdown=========================*/
   const [isHomeDropdownOpen, setIsHomeDropdownOpen] = useState(false);
   const [isShopDropdownOpen, setIsShopDropdownOpen] = useState(false);
   const [isAboutDropdownOpen, setIsAboutDropdownOpen] = useState(false);
-  const [hoveredMenu, setHoverdMenu] = useState(false);
+  const [hoveredMenu, setHoveredMenu] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const [showResults, setShowResults] = useState(false);
+  const searchInputRef = useRef(null);
+  const searchResultsRef = useRef(null);
+  const navigate = useNavigate();
+  const { addToCart } = useCart();
+  const [selectedCategory, setSelectedCategory] = useState(null);
+
+  // Handle dropdown menu visibility
   useEffect(() => {
     let timer;
     if (hoveredMenu === "home") {
@@ -40,24 +49,39 @@ export default function Header() {
     }
     return () => clearTimeout(timer);
   }, [hoveredMenu]);
-  //#endregion
-  //#region Tìm kiếm
-  const searchInputRef = useRef(null);
+
+  // Handle search input
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (
         searchInputRef.current &&
-        !searchInputRef.current.contains(e.target)
+        !searchInputRef.current.contains(e.target) &&
+        searchResultsRef.current &&
+        !searchResultsRef.current.contains(e.target)
       ) {
         searchInputRef.current.classList.remove("open");
+        setShowResults(false);
       }
     };
 
     document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  // Handle search functionality
+  useEffect(() => {
+    if (searchQuery.trim()) {
+      const results = products.filter((product) =>
+        product.name.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      setSearchResults(results.slice(0, 5));
+      setShowResults(true);
+    } else {
+      setSearchResults([]);
+      setShowResults(false);
+    }
+  }, [searchQuery]);
+
   const toggleSearch = () => {
     searchInputRef.current.classList.toggle("open");
     if (searchInputRef.current.classList.contains("open")) {
@@ -65,240 +89,291 @@ export default function Header() {
     }
   };
 
-  //#endregion
-  // scroll to top
-  const ScrollToTop = () => {
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/search?q=${encodeURIComponent(searchQuery)}`);
+      setShowResults(false);
+      setSearchQuery("");
+    }
+  };
+
+  const handleResultClick = (product) => {
+    navigate(`/product/${product.slug}`);
+    setShowResults(false);
+    setSearchQuery("");
+  };
+
+  const handleAddToCart = (e, product) => {
+    e.preventDefault();
+    e.stopPropagation();
+    addToCart(product);
+  };
+
+  const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  //#region luu trang thai khi click vao category
   const handleCategoryClick = (slug) => {
     localStorage.setItem("selectedCategory", slug);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    scrollToTop();
   };
-  //#endregion
-  return (
-    <div>
-      <header className="header">
-        <nav className="nav container">
-          <Link to="/" className="nav__logo" onClick={ScrollToTop}>
-            <img src={logo} alt="" className="nav__logo-img" />
-          </Link>
-          <div className="nav__left container">
-            <ul className="nav__list">
-              <li
-                className="dropdown"
-                onMouseEnter={() => setHoverdMenu("home")}
-                onMouseLeave={() => setHoverdMenu(false)}
-              >
-                <a className="">
-                  Trang chủ <CgChevronDown />
-                </a>
 
-                {isHomeDropdownOpen && (
-                  <div className="dropdown__menu">
+  return (
+    <header className="header">
+      <nav className="nav container">
+        {/* Logo */}
+        <Link to="/" className="nav__logo" onClick={scrollToTop}>
+          <img src={logo} alt="Shop Logo" className="nav__logo-img" />
+        </Link>
+
+        {/* Main Navigation */}
+        <div className="nav__left container">
+          <ul className="nav__list">
+            {/* Home Dropdown */}
+            <li
+              className="dropdown"
+              onMouseEnter={() => setHoveredMenu("home")}
+              onMouseLeave={() => setHoveredMenu(false)}
+            >
+              <Link to="/" className="nav__link">
+                Trang chủ <CgChevronDown />
+              </Link>
+
+              {isHomeDropdownOpen && (
+                <div className="dropdown__menu">
+                  <h3>
+                    <strong>Trang chủ</strong>
+                  </h3>
+                  <ul>
+                    <li>
+                      <Link to="/category/ban-chay">Bán chạy</Link>
+                    </li>
+                    <li>
+                      <Link
+                        to="/category/thoi-trang"
+                        onClick={handleCategoryClick}
+                      >
+                        Thời trang
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        to="/category/cong-nghe"
+                        onClick={handleCategoryClick}
+                      >
+                        Thiết bị điện tử
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        to="/category/doi-song"
+                        onClick={handleCategoryClick}
+                      >
+                        Nhà cửa & đời sống
+                      </Link>
+                    </li>
+                  </ul>
+                </div>
+              )}
+            </li>
+
+            {/* Shop Dropdown */}
+            <li
+              className="dropdown"
+              onMouseEnter={() => setHoveredMenu("shop")}
+              onMouseLeave={() => setHoveredMenu(false)}
+            >
+              <Link
+                to="/category/all"
+                onClick={() => {
+                  setSelectedCategory(null);
+                  localStorage.removeItem("selectedCategory");
+                  localStorage.setItem("showFilter", "true");
+                  scrollToTop();
+                }}
+                className="nav__link"
+              >
+                Cửa hàng <CgChevronDown />
+              </Link>
+
+              {isShopDropdownOpen && (
+                <div className="dropdown__menu shop-dropdown">
+                  <div className="shop-dropdown__column">
                     <h3>
-                      <strong>Trang chủ</strong>
+                      <strong>Loại sản phẩm</strong>
                     </h3>
-                    <ul className="">
-                      <li className="">
-                        <a className="" href="#">
-                          Bán chạy
-                        </a>
+                    <ul>
+                      <li>
+                        <Link
+                          to="/category/all"
+                          onClick={() => {
+                            setSelectedCategory(null);
+                            localStorage.removeItem("selectedCategory");
+                            localStorage.setItem("showFilter", "true");
+                            scrollToTop();
+                          }}
+                        >
+                          Tất cả sản phẩm
+                        </Link>
                       </li>
-                      <li className="">
+                      <li>
+                        <Link
+                          to="/category/phu-kien"
+                          onClick={handleCategoryClick}
+                        >
+                          Phụ kiện
+                        </Link>
+                      </li>
+                      <li>
                         <Link
                           to="/category/thoi-trang"
                           onClick={handleCategoryClick}
                         >
-                          thời trang
+                          Quần áo <span className="hot-tag">HOT</span>
                         </Link>
                       </li>
-                      <li className="">
+                      <li>
                         <Link
-                          to="/category/cong-nghe"
+                          to="/category/giay-dep"
                           onClick={handleCategoryClick}
                         >
-                          Thiết bị điện tử
+                          Giày dép
                         </Link>
                       </li>
-                      <li className="">
+                      <li>
                         <Link
-                          to="/category/doi-song"
+                          to="/category/do-choi"
                           onClick={handleCategoryClick}
                         >
-                          nhà cửa & đời sống
+                          Đồ chơi <span className="hot-tag">HOT</span>
+                        </Link>
+                      </li>
+                      <li>
+                        <Link
+                          to="/category/nha-sach"
+                          onClick={handleCategoryClick}
+                        >
+                          Nhà sách <span className="hot-tag">HOT</span>
                         </Link>
                       </li>
                     </ul>
                   </div>
-                )}
-              </li>
-              <li
-                className="dropdown"
-                onMouseEnter={() => setHoverdMenu("shop")}
-                onMouseLeave={() => setHoverdMenu(false)}
-              >
-                <a className="">
-                  Cửa hàng <CgChevronDown />
-                </a>
-
-                {isShopDropdownOpen && (
-                  <div className="dropdown__menu shop-dropdown">
-                    <div className="shop-dropdown__column">
-                      <h3>
-                        <strong>Loại sản phẩm</strong>
-                      </h3>
-                      <ul className="">
-                        <li className="">
-                          <Link
-                            to="/category/all"
-                            onClick={handleCategoryClick}
-                          >
-                            Tất cả sản phẩm
-                          </Link>
-                        </li>
-                        <li className="">
-                          <Link
-                            to="/category/phu-kien"
-                            onClick={handleCategoryClick}
-                          >
-                            Phụ kiện
-                          </Link>
-                        </li>
-                        <li className="">
-                          <Link
-                            to="/category/thoi-trang"
-                            onClick={handleCategoryClick}
-                          >
-                            Quần áo <span className="hot-tag">HOT</span>
-                          </Link>
-                        </li>
-                        <li className="">
-                          <Link
-                            to="/category/giay-dep"
-                            onClick={handleCategoryClick}
-                          >
-                            Giày dép
-                          </Link>
-                        </li>
-                        <li className="">
-                          <Link
-                            to="/category/do-choi"
-                            onClick={handleCategoryClick}
-                          >
-                            Đồ chơi <span className="hot-tag">HOT</span>
-                          </Link>
-                        </li>
-                        <li className="">
-                          <Link
-                            to="/category/nha-sach"
-                            onClick={handleCategoryClick}
-                          >
-                            Nhà sách <span className="hot-tag">HOT</span>
-                          </Link>
-                        </li>
-                      </ul>
-                    </div>
-                    <div className="shop-dropdown__column">
-                      <h3>
-                        <strong>Tìm kiếm</strong>
-                      </h3>
-                      <ul className="">
-                        <li className="">
-                          <Link to="category/all" onClick={handleCategoryClick}>
-                            sản phẩm theo loại
-                            <span className="hot-tag">HOT</span>
-                          </Link>
-                        </li>
-                        <li className="">
-                          <a className="" href="#">
-                            sản phẩm theo đơn giá
-                          </a>
-                        </li>
-                      </ul>
-                      <h3>
-                        <strong>Trang điện tử</strong>
-                      </h3>
-                      <ul className="">
-                        <li className="">
-                          <a className="" href="#">
-                            giỏ hàng
-                          </a>
-                        </li>
-                        <li className="">
-                          <a className="" href="#">
-                            Tài khoản
-                          </a>
-                        </li>{" "}
-                        <li className="">
-                          <a className="" href="#">
-                            lịch sử mua hàng
-                          </a>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                )}
-              </li>
-
-              <li
-                className="dropdown"
-                onMouseEnter={() => setHoverdMenu("about")}
-                onMouseLeave={() => setHoverdMenu(false)}
-              >
-                <a className="">
-                  Thông tin <CgChevronDown />
-                </a>
-
-                {isAboutDropdownOpen && (
-                  <div className="dropdown__menu">
+                  <div className="shop-dropdown__column">
                     <h3>
-                      <strong>Thông tin cửa hàng</strong>
+                      <strong>Tài khoản</strong>
                     </h3>
-                    <ul className="">
-                      <li className="">
-                        <a className="" href="#">
-                          Về chúng tôi
-                        </a>
+                    <ul>
+                      <li>
+                        <Link to="/login">Đăng nhập</Link>
                       </li>
-                      <li className="">
-                        <a className="" href="#">
-                          Liên hệ
-                        </a>
+                      <li>
+                        <Link to="/signup">Đăng ký</Link>
+                      </li>
+                      <li>
+                        <Link to="/cart">Giỏ hàng</Link>
+                      </li>
+                      <li>
+                        <Link to="/orders">Lịch sử mua hàng</Link>
                       </li>
                     </ul>
                   </div>
-                )}
-              </li>
-            </ul>
-          </div>
-          <div className="nav__menu">
-            <ul className="nav__list">
-              <li className="nav__item search-container">
-                <CgSearch className="nav__item-search" onClick={toggleSearch} />
-                <input
-                  ref={searchInputRef}
-                  type="text"
-                  placeholder="Tìm kiếm sản phẩm..."
-                  className="search-input"
-                />
-              </li>
+                </div>
+              )}
+            </li>
 
-              <li className="nav__item">
-                <a className="" href="">
-                  <CgUser />
-                </a>
-              </li>
-              <li className="nav__item">
-                <a className="" href="">
-                  <CgShoppingCart />
-                </a>
-              </li>
-            </ul>
+            {/* About Dropdown */}
+            <li
+              className="dropdown"
+              onMouseEnter={() => setHoveredMenu("about")}
+              onMouseLeave={() => setHoveredMenu(false)}
+            >
+              <Link to="/about" className="nav__link">
+                Thông tin <CgChevronDown />
+              </Link>
+
+              {isAboutDropdownOpen && (
+                <div className="dropdown__menu">
+                  <h3>
+                    <strong>Thông tin cửa hàng</strong>
+                  </h3>
+                  <ul>
+                    <li>
+                      <Link to="/about">Về chúng tôi</Link>
+                    </li>
+                    <li>
+                      <Link to="/contact">Liên hệ</Link>
+                    </li>
+                  </ul>
+                </div>
+              )}
+            </li>
+          </ul>
+        </div>
+
+        {/* Right Navigation */}
+        <div className="nav__icons">
+          {/* Search */}
+          <div className="nav__item">
+            <form onSubmit={handleSearchSubmit} className="search-form">
+              <CgSearch className="nav__item-search" onClick={toggleSearch} />
+              <input
+                ref={searchInputRef}
+                type="text"
+                placeholder="Tìm kiếm sản phẩm..."
+                className="search-input"
+                value={searchQuery}
+                onChange={handleSearchChange}
+              />
+              {showResults && searchResults.length > 0 && (
+                <div ref={searchResultsRef} className="search-results">
+                  {searchResults.map((product) => (
+                    <div
+                      key={product.id}
+                      className="search-result-item"
+                      onClick={() => handleResultClick(product)}
+                    >
+                      <img
+                        src={product.image}
+                        alt={product.name}
+                        className="search-result-image"
+                      />
+                      <div className="search-result-info">
+                        <h4>{product.name}</h4>
+                        <p>{product.price.toLocaleString()} VND</p>
+                      </div>
+                      <button
+                        className="search-result-add-cart"
+                        onClick={(e) => handleAddToCart(e, product)}
+                      >
+                        <CgShoppingCart />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </form>
           </div>
-        </nav>
-      </header>
-    </div>
+
+          {/* User Account */}
+          <div className="nav__item">
+            <Link to="/login">
+              <CgUser className="nav__item-user" />
+            </Link>
+          </div>
+
+          {/* Shopping Cart */}
+          <div className="nav__item">
+            <Link to="/cart">
+              <CgShoppingCart className="nav__item-cart" />
+            </Link>
+          </div>
+        </div>
+      </nav>
+    </header>
   );
 }

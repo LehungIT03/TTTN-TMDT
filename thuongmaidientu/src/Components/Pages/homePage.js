@@ -1,126 +1,234 @@
 import React, { useEffect, useState } from "react";
-import { banners, subBanner, categories } from "../../data";
-import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
-import "../Css/homePage.css";
-import { products } from "../../data";
 import { Link } from "react-router-dom";
-import CategoriesFilter from "./categoriesFilter";
+import { products } from "../../data/products";
+import { categories, banners, subBanner } from "../../data/categoriesData";
+import { useCart } from "../../context/CartContext";
+import { FaShoppingCart } from "react-icons/fa";
+import "../Css/homePage.css";
+
+// Fallback Image Component
+const FallbackImage = ({ alt, className }) => (
+  <div className={`fallback-image ${className}`}>
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+      <circle cx="8.5" cy="8.5" r="1.5" />
+      <polyline points="21 15 16 10 5 21" />
+    </svg>
+    <span>{alt}</span>
+  </div>
+);
+
+// Product Card Component
+const ProductCard = ({ product, onAddToCart }) => {
+  const [imageError, setImageError] = useState(false);
+  const [isAdding, setIsAdding] = useState(false);
+
+  const handleAddToCart = () => {
+    setIsAdding(true);
+    onAddToCart(product);
+    setTimeout(() => setIsAdding(false), 1000);
+  };
+
+  return (
+    <div className="product-card">
+      <div className="product__image">
+        <Link to={`/product/${product.id}`}>
+          {imageError ? (
+            <FallbackImage alt={product.name} className="product-fallback" />
+          ) : (
+            <img
+              src={product.image}
+              alt={product.name}
+              onError={() => setImageError(true)}
+            />
+          )}
+        </Link>
+      </div>
+      <div className="product__info">
+        <Link to={`/product/${product.id}`}>
+          <h3 className="product__name">{product.name}</h3>
+          <p className="product__price">{product.price.toLocaleString()} VND</p>
+        </Link>
+        <button
+          className={`add-to-cart ${isAdding ? "adding" : ""}`}
+          onClick={handleAddToCart}
+          disabled={isAdding}
+        >
+          <FaShoppingCart className={isAdding ? "rotate" : ""} />
+          {isAdding ? "Đã thêm" : "Thêm vào giỏ"}
+        </button>
+      </div>
+    </div>
+  );
+};
+
+// Banner Slider Component
+const BannerSlider = ({ banners, currentIndex, onDotClick }) => {
+  const [imageErrors, setImageErrors] = useState({});
+
+  return (
+    <div className="banner-slider">
+      {banners.map((banner, index) => (
+        <div
+          key={banner.id}
+          className={`banner-slide ${index === currentIndex ? "active" : ""}`}
+        >
+          {imageErrors[banner.id] ? (
+            <FallbackImage alt={banner.name} className="banner-fallback" />
+          ) : (
+            <img
+              src={banner.img}
+              alt={banner.name}
+              onError={() =>
+                setImageErrors((prev) => ({ ...prev, [banner.id]: true }))
+              }
+            />
+          )}
+        </div>
+      ))}
+      <div className="banner-dots">
+        {banners.map((_, index) => (
+          <button
+            key={index}
+            className={`dot ${index === currentIndex ? "active" : ""}`}
+            onClick={() => onDotClick(index)}
+            aria-label={`Go to slide ${index + 1}`}
+          />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// Product Section Component
+const ProductSection = ({ title, products, onAddToCart }) => (
+  <div className={`${title.toLowerCase().replace(/\s+/g, "-")}-products`}>
+    <h2>{title}</h2>
+    <div className="products-grid">
+      {products.map((product) => (
+        <ProductCard
+          key={product.id}
+          product={product}
+          onAddToCart={onAddToCart}
+        />
+      ))}
+    </div>
+  </div>
+);
 
 export default function HomePage() {
-  //#region BannerBanner
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [autoPlay, setAutoPlay] = useState(true);
-  const prevSlide = () => {
-    setCurrentIndex(
-      (prevIndex) => (prevIndex - 1 + banners.length) % banners.length
-    );
-  };
+  const { addToCart } = useCart();
+  const [currentBannerIndex, setCurrentBannerIndex] = useState(0);
+  const [showNotification, setShowNotification] = useState(false);
+  const [notificationProduct, setNotificationProduct] = useState(null);
 
-  const nextSlide = () => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % banners.length);
-  };
+  // Get featured products (products with rating >= 4.5)
+  const featuredProducts = products.filter((product) => product.rating >= 4.5);
+
+  // Get new products (products added in the last 30 days)
+  const newProducts = products
+    .filter((product) => {
+      const productDate = new Date(product.dateAdded);
+      const thirtyDaysAgo = new Date();
+      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+      return productDate >= thirtyDaysAgo;
+    })
+    .sort((a, b) => new Date(b.dateAdded) - new Date(a.dateAdded))
+    .slice(0, 8);
+
+  // Get random products (excluding featured and new products)
+  const randomProducts = [...products]
+    .filter(
+      (product) =>
+        !featuredProducts.includes(product) && !newProducts.includes(product)
+    )
+    .sort(() => Math.random() - 0.5)
+    .slice(0, 8);
+
   useEffect(() => {
-    let interval;
-    if (autoPlay) {
-      interval = setInterval(() => {
-        nextSlide();
-      }, 3000);
-    }
-    return () => clearInterval(interval);
-  }, [currentIndex, autoPlay]);
-  //#endregion
-  //#region random san pham
-  const [randomProduct, setRandomProduct] = useState([]);
-  useEffect(() => {
-    const shuffled = [...products].sort(() => 0.5 - Math.random());
-    setRandomProduct(shuffled.slice(0, 8));
+    const timer = setInterval(() => {
+      setCurrentBannerIndex((prevIndex) =>
+        prevIndex === banners.length - 1 ? 0 : prevIndex + 1
+      );
+    }, 5000);
+
+    return () => clearInterval(timer);
   }, []);
-  //#endregion
-  //#region scroll
 
-  const handleCategoryClick = (slug) => {
-    localStorage.setItem("selectedCategory", slug);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+  const handleAddToCart = (product) => {
+    addToCart(product);
+    setNotificationProduct(product);
+    setShowNotification(true);
+    setTimeout(() => setShowNotification(false), 3000);
   };
-  //#endregion
+
   return (
-    <div className="home__page">
-      <div className="banner__container">
-        <div
-          className="main__banner"
-          onMouseEnter={() => setAutoPlay(false)}
-          onMouseLeave={() => setAutoPlay(true)}
-        >
-          <button className="arrow left" onClick={prevSlide}>
-            <FaAngleLeft />
-          </button>
-          <div
-            className="banner__wrapper"
-            style={{ transform: `translateX(-${currentIndex * 100}%)` }}
-          >
-            {banners.map((banner, index) => (
-              <img
-                key={banner.id}
-                className={`banner__image ${
-                  index === currentIndex ? "active" : ""
-                }`}
-                src={banner.img}
-                alt={banner.name}
-              />
-            ))}
-          </div>
-          <button className="arrow right" onClick={nextSlide}>
-            <FaAngleRight />
-          </button>
-          <div className="dots">
-            {banners.map((_, index) => (
-              <div
-                key={index}
-                className={`dot ${index === currentIndex ? "active" : ""}`}
-                onClick={() => setCurrentIndex(index)}
-              ></div>
-            ))}
-          </div>
-        </div>
-        <div className="sub__banners">
-          {subBanner.map((item) => (
-            <img src={item.img} alt="category" className="side__banner" />
+    <div className="home-page">
+      <BannerSlider
+        banners={banners}
+        currentIndex={currentBannerIndex}
+        onDotClick={setCurrentBannerIndex}
+      />
+
+      <div className="categories-section">
+        <h2>Danh mục sản phẩm</h2>
+        <div className="categories-grid">
+          {categories.map((category) => (
+            <Link
+              key={category.id}
+              to={`/categories/${category.slug}`}
+              className="category-card"
+            >
+              <img src={category.img} alt={category.name} />
+              <h3>{category.name}</h3>
+            </Link>
           ))}
         </div>
       </div>
-      <div className="category__container ">
-        {categories.map((category) => (
-          <Link
-            key={category.id}
-            className="category__item"
-            to={`/category/${category.slug}`}
-            onClick={() => {
-              handleCategoryClick(category.slug);
-            }}
-          >
-            <img
-              src={category.img}
-              alt="category"
-              className="category__image"
-            />
-            <span className="">{category.name}</span>
-          </Link>
+
+      <ProductSection
+        title="Sản phẩm nổi bật"
+        products={featuredProducts}
+        onAddToCart={handleAddToCart}
+      />
+
+      <div className="sub-banners">
+        {subBanner.map((banner) => (
+          <div key={banner.id} className="sub-banner">
+            <img src={banner.img} alt={banner.name} />
+          </div>
         ))}
       </div>
 
-      <div className="category__divider"></div>
-      <div className="random__products">
-        <h2 className="product__title">Sản phẩm</h2>
-        <div className="product__grid">
-          {randomProduct.map((product) => (
-            <div className="product__card" key={product.id}>
-              <img className="" src={product.img} />
-              <h3 className="">{product.name}</h3>
-              <p className="">{product.price} VND</p>
-            </div>
-          ))}
-        </div>
+      <div className="products-sections">
+        <ProductSection
+          title="Sản phẩm mới"
+          products={newProducts}
+          onAddToCart={handleAddToCart}
+        />
+
+        <ProductSection
+          title="Sản phẩm ngẫu nhiên"
+          products={randomProducts}
+          onAddToCart={handleAddToCart}
+        />
       </div>
+
+      {showNotification && notificationProduct && (
+        <div className="notification">
+          <p>Đã thêm {notificationProduct.name} vào giỏ hàng</p>
+        </div>
+      )}
     </div>
   );
 }

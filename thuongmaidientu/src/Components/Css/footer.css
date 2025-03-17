@@ -1,183 +1,176 @@
 /*==================== FOOTER ====================*/
 .footer {
-  background-color: var(--bg-color);
+  background: linear-gradient(to bottom, #ffffff, #f8f9fa);
+  padding: 80px 0 0;
+  margin-top: 80px;
+  position: relative;
+  overflow: hidden;
 }
 
-.footer__grid {
-  grid-template-columns: 4fr 2fr 3fr 3fr;
-  padding-block: 6.25rem 4.5rem;
+.footer::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(to right, #4a90e2, #67b26f);
 }
 
-.footer__title,
-.footer__logo-img {
-  margin-bottom: 2rem;
+.footer__container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 50px;
+  padding-bottom: 60px;
+  position: relative;
 }
 
-.footer__logo-img {
-  width: 150px;
+.footer__section {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  position: relative;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 12px;
+  transition: transform 0.3s ease;
+}
+
+.footer__section:hover {
+  transform: translateY(-5px);
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+}
+
+.footer__title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 15px;
+  position: relative;
+  padding-bottom: 10px;
+}
+
+.footer__title::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 40px;
+  height: 3px;
+  background: linear-gradient(to right, #4a90e2, #67b26f);
+  border-radius: 2px;
 }
 
 .footer__description {
-  margin-bottom: 1.25rem;
+  color: #666;
+  line-height: 1.8;
+  margin-bottom: 25px;
+  font-size: 15px;
+}
+
+.footer__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer__item {
+  margin-bottom: 12px;
+}
+
+.footer__link {
+  color: #666;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.footer__link:hover {
+  color: #4a90e2;
+}
+
+.footer__social {
+  display: flex;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.footer__social-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background-color: #fff;
+  border-radius: 50%;
+  color: #666;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.footer__social-link:hover {
+  background-color: #4a90e2;
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+.footer__contact-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 .footer__contact-item {
   display: flex;
   align-items: center;
-  column-gap: 0.75rem;
-  margin-bottom: 1rem;
+  gap: 10px;
+  margin-bottom: 15px;
+  color: #666;
 }
 
-.footer__contact-item .icon {
-  color: var(--first-color);
-  font-style: var(--larger-font-size);
+.footer__contact-icon {
+  color: #4a90e2;
+  font-size: 18px;
 }
 
-.footer__title {
-  font-size: var(--h3-font-size);
-  letter-spacing: 1.5px;
-  position: relative;
-  padding-bottom: 1.25rem;
+.footer__bottom {
+  background-color: #fff;
+  padding: 20px 0;
+  border-top: 1px solid #eee;
 }
 
-.footer__title::before,
-.footer__title::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  height: 2px;
-  background-color: var(--first-color);
-}
-
-.footer__title::before {
-  left: 0;
-  width: 12px;
-}
-
-.footer__title::after {
-  left: 1.125rem;
-  width: 30px;
-}
-
-.footer__links,
-.footer__link {
-  display: flex;
-}
-
-.footer__links {
-  flex-direction: column;
-  gap: 1.25rem;
-}
-
-.footer__link {
-  color: var(--text-color);
-  align-items: center;
-  column-gap: 0.25rem;
-}
-
-.footer__link .icon {
-  color: var(--text-color);
-}
-/*==================== FOOTER SALE LIST ====================*/
-.footer__sale {
-  background-color: var(--bg-color);
-  padding: 2rem 1.5rem;
-  position: relative;
-}
-
-.footer__sale::before {
-  content: "";
-  position: absolute;
-  inset: 0.5rem;
-  border: 2px dashed var(--text-color);
-}
-
-.sale-item {
-  display: flex;
-  justify-content: space-between;
-}
-
-.sale-item:not(:last-child) {
-  margin-bottom: 1.125rem;
-}
-/*==================== FOOTER SUBCRIBE ====================*/
-.subscribe__form {
-  position: relative;
-  display: inline-block;
-  width: 100%;
-  max-width: 250px;
-}
-.subscribe__form input {
-  width: 100%;
-  padding: 4px 8px;
-  border: 2px solid #333;
-  border-radius: 5px;
-  font-size: 14px;
-  outline: none;
-  background: transparent;
-}
-
-.subscribe__form input::placeholder {
-  color: transparent;
-}
-.subscribe__form label {
-  position: absolute;
-  left: 12px;
-  top: 15%;
-  transform: translateY(-50%);
-  color: gray;
-  font-size: 14px;
-  transition: 0.3s ease;
-  pointer-events: none;
-  background: white;
-  padding: 0 5px;
-}
-.subscribe__form input:focus + label,
-.subscribe__form input:not(:placeholder-shown) + label {
-  top: 0;
-  font-size: 12px;
-  color: #c49a6c;
-}
-
-.subscribe__btn {
-  width: 100%;
-  justify-content: center;
-  margin-top: 1.25rem;
-}
-/*==================== FOOTER SOCIAL ====================*/
-.footer__social-follow {
-  font-size: var(--normal-font-size);
-  margin-block: 1.5rem 1rem;
-}
-
-.footer__social-links {
-  display: flex;
-  column-gap: 1rem;
-}
-
-.footer__social-link {
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  color: var(--text-color);
-  border: 2px solid var(--first-color);
-  display: grid;
-  place-items: center;
-  transition: 0.5s var(--transition);
-}
-
-.footer__social-link:hover {
-  background-color: var(--first-color);
-  cursor: pointer;
-}
-/*==================== FOOTER COPYRIGHT ====================*/
-.copyright__text {
-  padding-block: 1.25rem;
-  border-top: 2px dashed hsla(0, 0, 100%, 0.1);
+.footer__copyright {
   text-align: center;
-  color: var(--text-color);
+  color: #666;
+  margin: 0;
+  font-size: 14px;
 }
 
-.copyright__text span {
-  color: var(--first-color);
+@media (max-width: 768px) {
+  .footer {
+    padding: 40px 0 0;
+  }
+
+  .footer__container {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer__container {
+    grid-template-columns: 1fr;
+  }
+
+  .footer__section {
+    text-align: center;
+  }
+
+  .footer__social {
+    justify-content: center;
+  }
+
+  .footer__contact-item {
+    justify-content: center;
+  }
 }

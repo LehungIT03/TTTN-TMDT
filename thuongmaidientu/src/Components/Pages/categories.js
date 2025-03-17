@@ -1,92 +1,86 @@
 import React, { useEffect, useState } from "react";
-import { products, categories } from "../../data";
+import { useParams } from "react-router-dom";
+import { products } from "../../data/products";
+import { categories } from "../../data/categoriesData";
 import "../Css/categories.css";
 import ProductList from "./productList";
 import CategoriesFilter from "./categoriesFilter";
 import { IoMenu } from "react-icons/io5";
-import { useParams } from "react-router-dom";
+
+// Utility function to get category title
+const getCategoryTitle = (selectedCategory) => {
+  return (
+    categories.find((cat) => cat.slug === selectedCategory)?.name ||
+    "Danh sách toàn bộ sản phẩm"
+  );
+};
+
+// Utility function to filter products
+const filterProducts = (products, selectedCategory, selectedPrice) => {
+  let filtered = [...products];
+
+  // Filter by category
+  if (selectedCategory) {
+    filtered = filtered.filter(
+      (product) =>
+        product.category.toLowerCase().replace(/\s+/g, "-") === selectedCategory
+    );
+  }
+
+  // Filter by price range if selected
+  if (selectedPrice) {
+    const [min, max] = selectedPrice.split("-").map(Number);
+    if (!isNaN(min) && !isNaN(max)) {
+      filtered = filtered.filter(
+        (product) => product.price >= min && product.price <= max
+      );
+    }
+  }
+
+  return filtered;
+};
 
 export default function Categories() {
   const { slug } = useParams();
-
-  //tạo state để lưu danh sách sản phẩm theo loại
-  const [selectedCategory, setSelectedCategory] = useState(
-    localStorage.getItem("selectedCategory") || null
-  );
-  //tạo state để lưu giá sản phẩm
-  const [selectedPrice, setSelectedPrice] = useState(
-    localStorage.getItem("selectedPrice") || ""
-  );
-  //tạo state để lưu danh sách sản phẩm đã lọc
+  const [selectedCategory, setSelectedCategory] = useState(() => {
+    const saved = localStorage.getItem("selectedCategory");
+    return saved || null;
+  });
+  const [selectedPrice, setSelectedPrice] = useState(() => {
+    const saved = localStorage.getItem("selectedPrice");
+    return saved || "";
+  });
   const [filteredProducts, setFilteredProducts] = useState(products);
-  //tạo state để lưu trạng thái mở/đóng filter
-  const [isOpenFilter, setIsOpenFilter] = useState(false);
+  const [isOpenFilter, setIsOpenFilter] = useState(() => {
+    return localStorage.getItem("showFilter") === "true";
+  });
 
-  //lưu loại sản phẩm vào localStorage
+  // Update selectedCategory when slug changes
   useEffect(() => {
     if (slug === "all") {
       setSelectedCategory(null);
       localStorage.removeItem("selectedCategory");
+      setIsOpenFilter(true); // Show filter for "all" category
     } else {
       setSelectedCategory(slug);
       localStorage.setItem("selectedCategory", slug);
     }
   }, [slug]);
-  //lọc sản phẩm theo loại và giá
+
+  // Filter products based on selected category and price
   useEffect(() => {
-    filterProducts();
-  }, [selectedCategory, selectedPrice]);
-  //lọc sản phẩm theo loại và giá
-  const filterProducts = () => {
-    let filtered = products;
-
-    // Lọc theo danh mục
-    if (selectedCategory) {
-      filtered = filtered.filter(
-        (product) => product.slug === selectedCategory
-      );
-    }
-
-    // Lọc theo giá
-    if (selectedPrice) {
-      const [min, max] = selectedPrice.split("-").map(Number);
-      if (!isNaN(min) && !isNaN(max)) {
-        filtered = filtered.filter(
-          (product) => product.price >= min && product.price <= max
-        );
-      } else if (!isNaN(min)) {
-        filtered = filtered.filter((product) => product.price >= min);
-      }
-    }
-
+    const filtered = filterProducts(products, selectedCategory, selectedPrice);
     setFilteredProducts(filtered);
+  }, [selectedCategory, selectedPrice]);
+
+  // Handle filter close
+  const handleFilterClose = () => {
+    setIsOpenFilter(false);
+    localStorage.removeItem("showFilter");
   };
-  /*
-  const [products, setProducts] = useState([]);
-  lấy danh sách sản phẩm từ API theo loại và giá, và gán vào state products
 
-  useEffect(() => {
-    fetchProducts(selectedCategory, priceRange);
-  }, [selectedCategory, priceRange]);
-  const fetchProducts = async (category, price) => {
-    let url = `/api/products?`;
-    if (category) url += `category=${category}&`;
-    if (price) url += `price=${price}`;
+  const categoryTitle = getCategoryTitle(selectedCategory);
 
-    try {
-      const response = await fetch(url);
-      const data = await response.json();
-      setProducts(data);
-    } catch (error) {
-      console.error("Lỗi khi lấy danh sách sản phẩm:", error);
-    }
-  };
-*/
-
-  //lọc sản phẩm theo loại
-  const categoryTitle =
-    categories.find((cat) => cat.slug === selectedCategory)?.name ||
-    "Danh sách toàn bộ sản phẩm";
   return (
     <div className="category__page">
       <div className="category__header">
@@ -95,6 +89,7 @@ export default function Categories() {
         </button>
         <h1 className="title__category">{categoryTitle}</h1>
       </div>
+
       {isOpenFilter && (
         <CategoriesFilter
           categories={categories}
@@ -102,7 +97,8 @@ export default function Categories() {
           setSelectedCategory={setSelectedCategory}
           selectedPrice={selectedPrice}
           setSelectedPrice={setSelectedPrice}
-          closeFilter={() => setIsOpenFilter(false)}
+          closeFilter={handleFilterClose}
+          products={products}
         />
       )}
 

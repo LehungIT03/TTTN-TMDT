@@ -1,0 +1,191 @@
+/*=============================== Trang homepage =================================*/
+.home__page {
+  width: 100%;
+  background-color: var(--bg-color);
+  text-align: center;
+  margin-top: 100px;
+}
+
+.banner__container {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 10px;
+  width: 100%;
+  max-width: 1200px;
+  margin: auto;
+}
+
+/*=============================== Banner chính =================================*/
+
+.main__banner {
+  position: relative;
+  width: 100%;
+  height: 300px;
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+.banner__wrapper {
+  display: flex;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.5s ease-in-out;
+}
+
+.banner__image {
+  min-width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 10px;
+  flex: 1;
+}
+
+.banner__image.active {
+  transform: translateX(0%);
+}
+
+.banner__image {
+  transform: translateX(100%);
+}
+/*=============================== Arrow =================================*/
+.arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  color: var(--title-color);
+  border: none;
+  padding: 12px;
+  cursor: pointer;
+  font-size: 24px;
+  border-radius: 50%;
+  transition: color 0.3s ease;
+  z-index: 10;
+}
+
+.arrow.left {
+  left: 10px;
+}
+
+.arrow.right {
+  right: 10px;
+}
+
+.arrow:hover {
+  color: var(--first-color);
+}
+/*=============================== Chỉ mục (Dots) =================================*/
+.dots {
+  position: absolute;
+  bottom: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.dot.active {
+  background-color: var(--bg-color); /* Màu nổi bật khi active */
+}
+
+/*=============================== Banner phụ =================================*/
+.sub__banners {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.side__banner {
+  width: 100%;
+  height: 145px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+/*=============================== Loại sản phẩm =================================*/
+.category__container {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  gap: 40px;
+  padding: 40px 80px;
+  width: 100%;
+  padding-bottom: 100px;
+  position: relative;
+}
+.category__divider {
+  width: 90%;
+  height: 2px;
+  background-color: var(--text-color);
+  margin: 0 auto;
+}
+.category__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.3s ease-in-out;
+  flex: 1;
+}
+
+.category__item:hover {
+  transform: scale(1.1);
+}
+
+.category__item img {
+  width: 80px;
+  height: 80px;
+  border-radius: 10px;
+  background: var(--bg-color);
+  padding: 8px;
+}
+
+.category__item span {
+  margin-top: 10px;
+  font-size: 14px;
+  color: var(--text-color);
+  font-weight: 500;
+}
+/*=============================== Sản phẩm ngẫu nhiên =================================*/
+.random__products {
+  text-align: center;
+  padding-top: 20px;
+}
+.product__title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+.product__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  padding: 0 10%;
+}
+.product__card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px;
+  text-align: center;
+  background: #fff;
+  transition: transform 0.2s;
+}
+.product__card:hover {
+  transform: scale(1.05);
+}
+
+.product__card img {
+  max-width: 100%;
+  border-radius: 8px;
+}

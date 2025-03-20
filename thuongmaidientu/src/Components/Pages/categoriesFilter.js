@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "../../context/CartContext";
 import { FaShoppingCart, FaFilter, FaSort, FaSpinner } from "react-icons/fa";
 import "../Css/categoriesFilter.css";
@@ -13,33 +13,28 @@ export default function CategoriesFilter({
   closeFilter,
   products = [],
 }) {
+  const navigate = useNavigate();
   const { addToCart } = useCart();
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [sortBy, setSortBy] = useState("default");
-  const [priceRange, setPriceRange] = useState({ min: 0, max: 100000000 });
+  const [priceRange, setPriceRange] = useState({ min: "", max: "" });
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Initialize price range from selectedPrice if it exists
-  useEffect(() => {
-    if (selectedPrice) {
-      const [min, max] = selectedPrice.split("-").map(Number);
-      if (!isNaN(min) && !isNaN(max)) {
-        setPriceRange({ min, max });
-      }
-    }
-  }, [selectedPrice]);
-
-  // Validate and sanitize price range
-  const validatePriceRange = (min, max) => {
-    const minPrice = Math.max(0, Number(min) || 0);
-    const maxPrice = Math.max(minPrice, Number(max) || 100000000);
-    return { min: minPrice, max: maxPrice };
-  };
-
   // Handle price range change
   const handlePriceRangeChange = (type, value) => {
-    const newValue = Number(value) || 0;
+    // Allow empty value for max, but keep min at 0
+    if (value === "") {
+      setPriceRange((prev) => ({
+        ...prev,
+        [type]: type === "min" ? 0 : "",
+      }));
+      return;
+    }
+
+    const newValue = Number(value);
+    if (isNaN(newValue)) return;
+
     setPriceRange((prev) => {
       const newRange = {
         ...prev,
@@ -50,6 +45,25 @@ export default function CategoriesFilter({
       setSelectedPrice(`${validatedRange.min}-${validatedRange.max}`);
       return validatedRange;
     });
+  };
+
+  // Initialize price range from selectedPrice if it exists
+  useEffect(() => {
+    if (selectedPrice) {
+      const [min, max] = selectedPrice.split("-").map(Number);
+      if (!isNaN(min) && !isNaN(max)) {
+        setPriceRange({ min, max });
+      }
+    } else {
+      setPriceRange({ min: 0, max: "" });
+    }
+  }, [selectedPrice]);
+
+  // Validate and sanitize price range
+  const validatePriceRange = (min, max) => {
+    const minPrice = Math.max(0, Number(min) || 0);
+    const maxPrice = max ? Math.max(minPrice, Number(max)) : "";
+    return { min: minPrice, max: maxPrice };
   };
 
   useEffect(() => {
@@ -71,19 +85,29 @@ export default function CategoriesFilter({
           );
         }
 
-        // Filter by price range
-        filtered = filtered.filter(
-          (product) =>
-            product?.price >= priceRange.min && product?.price <= priceRange.max
-        );
+        // Filter by price range with better validation
+        filtered = filtered.filter((product) => {
+          const productPrice = Number(product?.price) || 0;
+          const minPrice = priceRange.min === "" ? 0 : Number(priceRange.min);
+          // Only filter by max price if it's specified
+          if (priceRange.max === "") {
+            return productPrice >= minPrice;
+          }
+          const maxPrice = Number(priceRange.max);
+          return productPrice >= minPrice && productPrice <= maxPrice;
+        });
 
         // Sort products
         switch (sortBy) {
           case "price-asc":
-            filtered.sort((a, b) => (a?.price || 0) - (b?.price || 0));
+            filtered.sort(
+              (a, b) => (Number(a?.price) || 0) - (Number(b?.price) || 0)
+            );
             break;
           case "price-desc":
-            filtered.sort((a, b) => (b?.price || 0) - (a?.price || 0));
+            filtered.sort(
+              (a, b) => (Number(b?.price) || 0) - (Number(a?.price) || 0)
+            );
             break;
           case "name-asc":
             filtered.sort((a, b) =>
@@ -128,9 +152,27 @@ export default function CategoriesFilter({
   };
 
   const handleCategorySelect = (categorySlug) => {
-    setSelectedCategory(categorySlug);
+    // If categorySlug is null or "all", set selectedCategory to null
+    const categoryToSet = categorySlug === "all" ? null : categorySlug;
+    setSelectedCategory(categoryToSet);
     // Save to localStorage
-    localStorage.setItem("selectedCategory", categorySlug);
+    localStorage.setItem("selectedCategory", categoryToSet);
+    // Update URL path
+    if (categorySlug) {
+      navigate(`/category/${categorySlug}`);
+    } else {
+      navigate("/category/all");
+    }
+    // Smooth scroll to top
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  // Add this function at the top level of the component
+  const handleImageError = (e) => {
+    e.target.onerror = null; // Prevent infinite loop
+    // Use a more reliable fallback image URL
+    e.target.src =
+      "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300' viewBox='0 0 300 300'%3E%3Crect width='300' height='300' fill='%23f0f0f0'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial' font-size='16' fill='%23999'%3ENo Image%3C/text%3E%3C/svg%3E";
   };
 
   if (error) {
@@ -152,9 +194,6 @@ export default function CategoriesFilter({
             : "Tất cả sản phẩm"}
         </h1>
         <div className="category-controls">
-          <button className="filter-toggle" onClick={closeFilter}>
-            <FaFilter /> Đóng
-          </button>
           <select
             className="sort-select"
             value={sortBy}
@@ -243,9 +282,12 @@ export default function CategoriesFilter({
                     <img
                       src={product?.image}
                       alt={product?.name || "Product image"}
-                      onError={(e) => {
-                        e.target.src =
-                          "https://via.placeholder.com/300x300?text=No+Image";
+                      onError={handleImageError}
+                      loading="lazy"
+                      style={{
+                        objectFit: "cover",
+                        width: "100%",
+                        height: "100%",
                       }}
                     />
                   </Link>

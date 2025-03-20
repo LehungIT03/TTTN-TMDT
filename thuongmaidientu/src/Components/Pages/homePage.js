@@ -186,7 +186,7 @@ export default function HomePage() {
           {categories.map((category) => (
             <Link
               key={category.id}
-              to={`/categories/${category.slug}`}
+              to={`/category/${category.slug}`}
               className="category-card"
             >
               <img src={category.img} alt={category.name} />

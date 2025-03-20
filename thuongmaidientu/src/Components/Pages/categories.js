@@ -20,11 +20,14 @@ const filterProducts = (products, selectedCategory, selectedPrice) => {
   let filtered = [...products];
 
   // Filter by category
-  if (selectedCategory) {
-    filtered = filtered.filter(
-      (product) =>
-        product.category.toLowerCase().replace(/\s+/g, "-") === selectedCategory
-    );
+  if (selectedCategory && selectedCategory !== "all") {
+    filtered = filtered.filter((product) => {
+      // Convert product category to slug format for comparison
+      const productCategorySlug = product.category
+        .toLowerCase()
+        .replace(/\s+/g, "-");
+      return productCategorySlug === selectedCategory;
+    });
   }
 
   // Filter by price range if selected
@@ -42,29 +45,17 @@ const filterProducts = (products, selectedCategory, selectedPrice) => {
 
 export default function Categories() {
   const { slug } = useParams();
-  const [selectedCategory, setSelectedCategory] = useState(() => {
-    const saved = localStorage.getItem("selectedCategory");
-    return saved || null;
-  });
+  const [selectedCategory, setSelectedCategory] = useState(slug);
   const [selectedPrice, setSelectedPrice] = useState(() => {
     const saved = localStorage.getItem("selectedPrice");
     return saved || "";
   });
   const [filteredProducts, setFilteredProducts] = useState(products);
-  const [isOpenFilter, setIsOpenFilter] = useState(() => {
-    return localStorage.getItem("showFilter") === "true";
-  });
+  const [isOpenFilter, setIsOpenFilter] = useState(true);
 
   // Update selectedCategory when slug changes
   useEffect(() => {
-    if (slug === "all") {
-      setSelectedCategory(null);
-      localStorage.removeItem("selectedCategory");
-      setIsOpenFilter(true); // Show filter for "all" category
-    } else {
-      setSelectedCategory(slug);
-      localStorage.setItem("selectedCategory", slug);
-    }
+    setSelectedCategory(slug);
   }, [slug]);
 
   // Filter products based on selected category and price
@@ -76,7 +67,6 @@ export default function Categories() {
   // Handle filter close
   const handleFilterClose = () => {
     setIsOpenFilter(false);
-    localStorage.removeItem("showFilter");
   };
 
   const categoryTitle = getCategoryTitle(selectedCategory);

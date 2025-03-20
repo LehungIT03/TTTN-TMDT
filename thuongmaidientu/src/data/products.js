@@ -5,7 +5,7 @@ export const products = [
     price: 29990000,
     image:
       "https://images.unsplash.com/photo-1678652197831-2d180705cd2c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
-    category: "Điện thoại",
+    category: "dien-thoai",
   },
   {
     id: 2,

@@ -1,9 +1,4 @@
-<<<<<<< HEAD
-.dashboard-container {
-  padding: 2rem;
-  max-width: 1200px;
-  margin: 0 auto;
-=======
+
 .dashboard-content {
   flex: 1;
   padding: 20px;
@@ -21,7 +16,6 @@
   border-radius: 8px;
   flex: 1;
   text-align: center;
->>>>>>> e7e0bfc (Khởi tạo trang product admin  và cập nhật giao diện)
 }
 
 /* Admin Dashboard Styles */
@@ -234,8 +228,6 @@ th {
     white-space: nowrap;
   }
 }
-<<<<<<< HEAD
-=======
 
 .pagination {
   margin-top: 20px;
@@ -256,4 +248,4 @@ th {
   background-color: #ccc;
   cursor: not-allowed;
 }
->>>>>>> e7e0bfc (Khởi tạo trang product admin  và cập nhật giao diện)
+

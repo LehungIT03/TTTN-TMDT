@@ -90,11 +90,7 @@
   content: "";
   position: absolute;
   top: 50%;
-<<<<<<< HEAD
-  width: 45%;
-=======
   width: 25%;
->>>>>>> e7e0bfc (Khởi tạo trang product admin  và cập nhật giao diện)
   height: 1px;
   background-color: #ddd;
 }

@@ -1,13 +1,8 @@
 /*==================== FOOTER ====================*/
 .footer {
   background: linear-gradient(to bottom, #ffffff, #f8f9fa);
-<<<<<<< HEAD
-  padding: 80px 0 0;
-  margin-top: 80px;
-=======
   padding: 20px 0 0;
   margin-top: 1px;
->>>>>>> e7e0bfc (Khởi tạo trang product admin  và cập nhật giao diện)
   position: relative;
   overflow: hidden;
 }
@@ -24,25 +19,15 @@
 
 .footer__container {
   display: grid;
-<<<<<<< HEAD
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 50px;
-  padding-bottom: 60px;
-=======
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 10px;
   padding-bottom: 1%;
->>>>>>> e7e0bfc (Khởi tạo trang product admin  và cập nhật giao diện)
   position: relative;
 }
 
 .footer__section {
   display: flex;
   flex-direction: column;
-<<<<<<< HEAD
-  gap: 25px;
-=======
->>>>>>> e7e0bfc (Khởi tạo trang product admin  và cập nhật giao diện)
   position: relative;
   padding: 20px;
   background: rgba(255, 255, 255, 0.5);

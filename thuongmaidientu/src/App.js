@@ -14,6 +14,13 @@ import Signup from "./Components/Pages/signup";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./Components/Routes/ProtectedRoute";
 import Dashboard from "./Dashboard/pages/dashboard";
+<<<<<<< HEAD
+=======
+import ProductAdmin from "./Dashboard/pages/productAdmin"
+
+
+
+>>>>>>> e7e0bfc (Khởi tạo trang product admin  và cập nhật giao diện)
 
 function App() {
   return (
@@ -25,7 +32,11 @@ function App() {
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/under-dev" element={<UnderDev />} />
+<<<<<<< HEAD
               <Route path="/category/:slug" element={<Categories />} />
+=======
+              <Route path="/category/:slug" element={<Categories />} />           
+>>>>>>> e7e0bfc (Khởi tạo trang product admin  và cập nhật giao diện)
               <Route path="/product/:id" element={<Product />} />
               <Route path="/cart" element={<Cart />} />
               <Route path="/login" element={<Login />} />
@@ -38,8 +49,21 @@ function App() {
                   </ProtectedRoute>
                 }
               />
+<<<<<<< HEAD
             </Routes>
             <Footer />
+=======
+               <Route
+                path="/productAdmin"
+                element={
+                  <ProtectedRoute requireAdmin={true}>
+                    <ProductAdmin />
+                  </ProtectedRoute>
+                }
+              />
+            </Routes>
+            <Footer /> 
+>>>>>>> e7e0bfc (Khởi tạo trang product admin  và cập nhật giao diện)
           </div>
         </Router>
       </CartProvider>

@@ -138,7 +138,11 @@
 
 /*=============================== Loại sản phẩm =================================*/
 .categories-section {
+<<<<<<< HEAD
   padding: 60px 20px;
+=======
+  padding: 20px 20px;
+>>>>>>> e7e0bfc (Khởi tạo trang product admin  và cập nhật giao diện)
   max-width: 1400px;
   margin: 0 auto;
   background-color: white;
@@ -150,7 +154,11 @@
   font-size: 28px;
   font-weight: bold;
   margin-bottom: 40px;
+<<<<<<< HEAD
   color: var(--title-color);
+=======
+ 
+>>>>>>> e7e0bfc (Khởi tạo trang product admin  và cập nhật giao diện)
   position: relative;
   display: inline-block;
 }
@@ -217,6 +225,13 @@
   color: var(--first-color);
 }
 
+<<<<<<< HEAD
+=======
+.sản-phẩm-nổi-bật-products{
+  margin: 20px auto;
+}
+
+>>>>>>> e7e0bfc (Khởi tạo trang product admin  và cập nhật giao diện)
 /*=============================== Sản phẩm =================================*/
 .featured-products,
 .new-products,

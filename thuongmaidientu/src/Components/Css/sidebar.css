@@ -1,0 +1,31 @@
+.dashboard-container {
+  display: flex;
+  height: 100%;
+  margin-top: 5%;
+}
+
+.sidebar {
+  width: 250px;
+  background: #2c3e50;
+  color: white;
+  padding: 20px;
+}
+ .sidebar h2 {
+    text-align: center;
+  }
+  
+  .sidebar ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .sidebar ul li {
+    padding: 10px;
+    cursor: pointer;
+    border-bottom: 1px solid #34495e;
+  }
+  
+  .sidebar ul li:hover {
+    background: #34495e;
+  }
+  

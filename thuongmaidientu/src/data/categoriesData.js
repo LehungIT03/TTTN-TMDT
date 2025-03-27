@@ -41,10 +41,7 @@ export const categories = [
     name: "Tai nghe",
     slug: "tai-nghe",
     img: "https://cdn-icons-png.flaticon.com/128/3791/3791461.png",
-<<<<<<< HEAD
 
-=======
->>>>>>> 307a585 (no message)
   },
   {
     id: 6,

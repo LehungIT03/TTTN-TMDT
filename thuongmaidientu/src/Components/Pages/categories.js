@@ -1,3 +1,6 @@
+
+
+
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { products } from "../../data/products";
@@ -76,7 +79,8 @@ export default function Categories() {
   // Handle filter close
   const handleFilterClose = () => {
     setIsOpenFilter(false);
-    localStorage.removeItem("showFilter");  };
+    localStorage.removeItem("showFilter");
+  };
 
   const categoryTitle = getCategoryTitle(selectedCategory);
 
@@ -100,8 +104,6 @@ export default function Categories() {
           products={products}
         />
       )}
-
-      <ProductList products={filteredProducts} />
     </div>
   );
 }

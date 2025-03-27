@@ -1,6 +1,3 @@
-
-
-
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { products } from "../../data/products";
@@ -86,13 +83,6 @@ export default function Categories() {
 
   return (
     <div className="category__page">
-      <div className="category__header">
-        <button className="filter__btn" onClick={() => setIsOpenFilter(true)}>
-          <IoMenu />
-        </button>
-        <h1 className="title__category">{categoryTitle}</h1>
-      </div>
-
       {isOpenFilter && (
         <CategoriesFilter
           categories={categories}

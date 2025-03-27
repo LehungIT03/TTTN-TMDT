@@ -223,34 +223,34 @@ export default function Header() {
                       </li>
                       <li>
                         <Link
-                          to="/category/phu-kien"
+                          to="/category/dien-thoai"
                           onClick={handleCategoryClick}
                         >
-                          Phụ kiện
+                          Điện thoại
                         </Link>
                       </li>
                       <li>
                         <Link
-                          to="/category/thoi-trang"
+                          to="/category/laptop"
                           onClick={handleCategoryClick}
                         >
-                          Quần áo <span className="hot-tag">HOT</span>
+                          Latop <span className="hot-tag">HOT</span>
                         </Link>
                       </li>
                       <li>
                         <Link
-                          to="/category/giay-dep"
+                          to="/category/phu-kien-dien-tu"
                           onClick={handleCategoryClick}
                         >
-                          Giày dép
+                          Phụ kiện điện tử
                         </Link>
                       </li>
                       <li>
                         <Link
-                          to="/category/do-choi"
+                          to="/category/thiet-bi-van-phong"
                           onClick={handleCategoryClick}
                         >
-                          Đồ chơi <span className="hot-tag">HOT</span>
+                          Thiết bị văn phòng <span className="hot-tag">HOT</span>
                         </Link>
                       </li>
                       <li>
@@ -258,7 +258,7 @@ export default function Header() {
                           to="/category/nha-sach"
                           onClick={handleCategoryClick}
                         >
-                          Nhà sách <span className="hot-tag">HOT</span>
+                          Thiết bị gia đình <span className="hot-tag">HOT</span>
                         </Link>
                       </li>
                     </ul>

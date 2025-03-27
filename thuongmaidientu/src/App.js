@@ -17,6 +17,8 @@ import Dashboard from "./Dashboard/pages/dashboard";
 import ProductAdmin from "./Dashboard/pages/productAdmin";
 import About from "./Components/Pages/about";
 import Contact from "./Components/Pages/contact";
+import UserAdmin from "./Dashboard/pages/userAdmin";
+import OrderAdmin from "./Dashboard/pages/orderAdmin";
 
 function App() {
   return (
@@ -48,6 +50,22 @@ function App() {
                 element={
                   <ProtectedRoute requireAdmin={true}>
                     <ProductAdmin />
+                  </ProtectedRoute>
+                }
+              />
+               <Route
+                path="/userAdmin"
+                element={
+                  <ProtectedRoute requireAdmin={true}>
+                    <UserAdmin />
+                  </ProtectedRoute>
+                }
+              />
+               <Route
+                path="/orderAdmin"
+                element={
+                  <ProtectedRoute requireAdmin={true}>
+                    <OrderAdmin />
                   </ProtectedRoute>
                 }
               />

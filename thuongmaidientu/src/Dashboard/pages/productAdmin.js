@@ -64,7 +64,10 @@ const ProductManager = () => {
                 <td>{product.category}</td>
                 <td>{product.inventory}</td>
                 <td>
-                  <button onClick={() => handleEditClick(product)}>
+                  <button
+                    className="edit-btn"
+                    onClick={() => handleEditClick(product)}
+                  >
                     Chỉnh sửa
                   </button>
                 </td>

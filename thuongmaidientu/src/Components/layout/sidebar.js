@@ -9,9 +9,8 @@ const Sidebar =() =>{
             <ul>
                 <li><Link to="/dashboard">Thống kê</Link></li>
                 <li><Link to="/productAdmin">Quản lý sản phẩm</Link></li>
-                <li><Link to="/ordersAdmin">Quản lý đơn hàng</Link></li>
-                <li><Link to="/usersAdmin">Người dùng</Link></li>
-                <li><Link to="/settingsAdmin">Cài đặt</Link></li>
+                <li><Link to="/orderAdmin">Quản lý đơn hàng</Link></li>
+                <li><Link to="/userAdmin">Người dùng</Link></li>
             </ul>
         </aside>
   

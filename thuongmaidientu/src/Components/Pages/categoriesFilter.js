@@ -1,7 +1,16 @@
+
+
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "../../context/CartContext";
-import { FaShoppingCart, FaFilter, FaSort, FaSpinner } from "react-icons/fa";
+import {
+  FaShoppingCart,
+  FaFilter,
+  FaSort,
+  FaSpinner,
+  FaChevronLeft,
+  FaChevronRight,
+} from "react-icons/fa";
 import "../Css/categoriesFilter.css";
 
 export default function CategoriesFilter({
@@ -20,6 +29,26 @@ export default function CategoriesFilter({
   const [priceRange, setPriceRange] = useState({ min: "", max: "" });
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6;
+
+  // Tính tổng số trang
+  const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+
+  // Lọc sản phẩm theo trang
+  const paginatedProducts = filteredProducts.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  // Chuyển trang
+  const handlePageChange = (newPage) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+      scrollToTop();
+    }
+  };
 
   // Handle price range change
   const handlePriceRangeChange = (type, value) => {
@@ -274,8 +303,8 @@ export default function CategoriesFilter({
               <FaSpinner className="spinner" />
               <p>Đang tải sản phẩm...</p>
             </div>
-          ) : Array.isArray(filteredProducts) && filteredProducts.length > 0 ? (
-            filteredProducts.map((product) => (
+          ) : paginatedProducts.length > 0 ? (
+            paginatedProducts.map((product) => (
               <div key={product?.id} className="product-card">
                 <div className="product__image">
                   <Link to={`/product/${product?.id}`} onClick={scrollToTop}>
@@ -315,6 +344,26 @@ export default function CategoriesFilter({
           )}
         </div>
       </div>
+      {/* Phân trang */}
+      {totalPages > 1 && (
+        <div className="pagination">
+          <button
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+          >
+            <FaChevronLeft /> Trang trước
+          </button>
+          <span>
+            Trang {currentPage} / {totalPages}
+          </span>
+          <button
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+          >
+            Trang sau <FaChevronRight />
+          </button>
+        </div>
+      )}
     </div>
   );
 }

@@ -152,26 +152,24 @@
       white-space: nowrap;
     }
   }
-  
-  .pagination {
-    margin-top: 20px;
-    text-align: center;
-  }
-  
-  .pagination button {
-    margin: 0 10px;
+
+  button.edit-btn {
     padding: 8px 12px;
     border: none;
-    background-color: #007bff;
+    background-color: #ff9800; /* Màu cam */
     color: white;
     cursor: pointer;
-    border-radius: 5px;
+    border-radius: 8px; /* Bo góc */
+    font-size: 14px;
+    transition: background 0.3s, transform 0.2s;
+    margin: 7px;
   }
   
-  .pagination button:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
+  button.edit-btn:hover {
+    background-color: #e68900;
+    transform: scale(1.05);
   }
+  
   
   /* Form chỉnh sửa */
   .overlay {

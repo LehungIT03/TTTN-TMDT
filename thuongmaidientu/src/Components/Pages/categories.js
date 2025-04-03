@@ -4,7 +4,7 @@ import { products } from "../../data/products";
 import { categories } from "../../data/categoriesData";
 import "../Css/categories.css";
 import ProductList from "./productList";
-import CategoriesFilter from "./categoriesFilter";
+import CategoriesFilter from "../../Container/categoriesFilter";
 import { IoMenu } from "react-icons/io5";
 
 // Utility function to get category title
@@ -76,7 +76,8 @@ export default function Categories() {
   // Handle filter close
   const handleFilterClose = () => {
     setIsOpenFilter(false);
-    localStorage.removeItem("showFilter");  };
+    localStorage.removeItem("showFilter");
+  };
 
   const categoryTitle = getCategoryTitle(selectedCategory);
 

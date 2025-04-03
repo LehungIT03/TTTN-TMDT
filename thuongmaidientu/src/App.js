@@ -1,8 +1,8 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./App.css";
-import Footer from "./Components/layout/footer";
-import Header from "./Components/layout/header";
+import Footer from "./Components/layout/footer/footer";
+import Header from "./Components/layout/header/header";
 import UnderDev from "./Components/layout/underDev";
 import HomePage from "./Components/Pages/homePage";
 import Categories from "./Components/Pages/categories";
@@ -14,7 +14,7 @@ import Signup from "./Components/Pages/signup";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./Components/Routes/ProtectedRoute";
 import Dashboard from "./Dashboard/pages/dashboard";
-import ProductAdmin from "./Dashboard/pages/productAdmin"
+import ProductAdmin from "./Dashboard/pages/productAdmin";
 
 function App() {
   return (
@@ -26,7 +26,7 @@ function App() {
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/under-dev" element={<UnderDev />} />
-              <Route path="/category/:slug" element={<Categories />} />           
+              <Route path="/category/:slug" element={<Categories />} />
               <Route path="/product/:id" element={<Product />} />
               <Route path="/cart" element={<Cart />} />
               <Route path="/login" element={<Login />} />
@@ -39,7 +39,7 @@ function App() {
                   </ProtectedRoute>
                 }
               />
-               <Route
+              <Route
                 path="/productAdmin"
                 element={
                   <ProtectedRoute requireAdmin={true}>
@@ -48,7 +48,7 @@ function App() {
                 }
               />
             </Routes>
-            <Footer /> 
+            <Footer />
           </div>
         </Router>
       </CartProvider>

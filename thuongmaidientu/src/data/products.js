@@ -7,7 +7,6 @@ export const products = [
       "https://images.unsplash.com/photo-1678652197831-2d180705cd2c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
     category: "dien-thoai",
     inventory: 5,
-
   },
   {
     id: 2,
@@ -26,7 +25,6 @@ export const products = [
       "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1920&q=80",
     category: "Máy tính bảng",
 
-
     inventory: 6,
   },
   {
@@ -34,7 +32,7 @@ export const products = [
     name: "AirPods Pro",
     price: 4990000,
     image:
-      "https://images.unsplash.com/photo-1588156979435-1c5b0c0c0c0c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
+      "https://assets3.cbsnewsstatic.com/hub/i/2022/07/11/ca1ba957-09ce-4ac3-a554-95404edf9e51/gettyimages-1211718389.jpg",
     category: "Phụ kiện",
 
     inventory: 5,

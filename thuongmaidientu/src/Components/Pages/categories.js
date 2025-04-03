@@ -83,13 +83,6 @@ export default function Categories() {
 
   return (
     <div className="category__page">
-      <div className="category__header">
-        <button className="filter__btn" onClick={() => setIsOpenFilter(true)}>
-          <IoMenu />
-        </button>
-        <h1 className="title__category">{categoryTitle}</h1>
-      </div>
-
       {isOpenFilter && (
         <CategoriesFilter
           categories={categories}
@@ -101,8 +94,6 @@ export default function Categories() {
           products={products}
         />
       )}
-
-      <ProductList products={filteredProducts} />
     </div>
   );
 }

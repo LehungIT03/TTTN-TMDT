@@ -15,6 +15,13 @@ import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./Components/Routes/ProtectedRoute";
 import Dashboard from "./Dashboard/pages/dashboard";
 import ProductAdmin from "./Dashboard/pages/productAdmin";
+<<<<<<< HEAD
+=======
+import About from "./Components/Pages/about";
+import Contact from "./Components/Pages/contact";
+import UserAdmin from "./Dashboard/pages/userAdmin";
+import OrderAdmin from "./Dashboard/pages/orderAdmin";
+>>>>>>> 56f87ce7bb8c61699082f07c44a02bb75c618092
 
 function App() {
   return (
@@ -29,6 +36,8 @@ function App() {
               <Route path="/category/:slug" element={<Categories />} />
               <Route path="/product/:id" element={<Product />} />
               <Route path="/cart" element={<Cart />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/contact" element={<Contact />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
               <Route
@@ -44,6 +53,22 @@ function App() {
                 element={
                   <ProtectedRoute requireAdmin={true}>
                     <ProductAdmin />
+                  </ProtectedRoute>
+                }
+              />
+               <Route
+                path="/userAdmin"
+                element={
+                  <ProtectedRoute requireAdmin={true}>
+                    <UserAdmin />
+                  </ProtectedRoute>
+                }
+              />
+               <Route
+                path="/orderAdmin"
+                element={
+                  <ProtectedRoute requireAdmin={true}>
+                    <OrderAdmin />
                   </ProtectedRoute>
                 }
               />

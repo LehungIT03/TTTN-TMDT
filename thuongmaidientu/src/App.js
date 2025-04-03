@@ -15,14 +15,10 @@ import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./Components/Routes/ProtectedRoute";
 import Dashboard from "./Dashboard/pages/dashboard";
 import ProductAdmin from "./Dashboard/pages/productAdmin";
-<<<<<<< HEAD
-=======
 import About from "./Components/Pages/about";
 import Contact from "./Components/Pages/contact";
 import UserAdmin from "./Dashboard/pages/userAdmin";
 import OrderAdmin from "./Dashboard/pages/orderAdmin";
->>>>>>> 56f87ce7bb8c61699082f07c44a02bb75c618092
-
 function App() {
   return (
     <AuthProvider>
@@ -56,7 +52,7 @@ function App() {
                   </ProtectedRoute>
                 }
               />
-               <Route
+              <Route
                 path="/userAdmin"
                 element={
                   <ProtectedRoute requireAdmin={true}>
@@ -64,7 +60,7 @@ function App() {
                   </ProtectedRoute>
                 }
               />
-               <Route
+              <Route
                 path="/orderAdmin"
                 element={
                   <ProtectedRoute requireAdmin={true}>

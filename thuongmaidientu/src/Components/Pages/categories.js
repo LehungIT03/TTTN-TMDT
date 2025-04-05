@@ -3,9 +3,7 @@ import { useParams } from "react-router-dom";
 import { products } from "../../data/products";
 import { categories } from "../../data/categoriesData";
 import "../Css/categories.css";
-import ProductList from "./productList";
-import CategoriesFilter from "./categoriesFilter";
-import { IoMenu } from "react-icons/io5";
+import CategoriesFilter from "../../Container/categoriesFilter";
 
 // Utility function to get category title
 const getCategoryTitle = (selectedCategory) => {

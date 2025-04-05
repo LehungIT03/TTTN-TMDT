@@ -1,8 +1,8 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./App.css";
-import Footer from "./Components/layout/footer";
-import Header from "./Components/layout/header";
+import Footer from "./Components/layout/footer/footer";
+import Header from "./Components/layout/header/header";
 import UnderDev from "./Components/layout/underDev";
 import HomePage from "./Components/Pages/homePage";
 import Categories from "./Components/Pages/categories";
@@ -19,7 +19,6 @@ import About from "./Components/Pages/about";
 import Contact from "./Components/Pages/contact";
 import UserAdmin from "./Dashboard/pages/userAdmin";
 import OrderAdmin from "./Dashboard/pages/orderAdmin";
-
 function App() {
   return (
     <AuthProvider>
@@ -53,7 +52,7 @@ function App() {
                   </ProtectedRoute>
                 }
               />
-               <Route
+              <Route
                 path="/userAdmin"
                 element={
                   <ProtectedRoute requireAdmin={true}>
@@ -61,7 +60,7 @@ function App() {
                   </ProtectedRoute>
                 }
               />
-               <Route
+              <Route
                 path="/orderAdmin"
                 element={
                   <ProtectedRoute requireAdmin={true}>

@@ -32,4 +32,5 @@ cd thuongmaidientu
 - `npm start`: khởi chạy dự án.
 - `npm run build`: khởi chạy xây dựng sản phẩm
 
+## FORK code về GITHUB để có thể làm việc và PULL REQUEST code về đây!
 ## Đây là đồ án thực tập tốt nghiệp

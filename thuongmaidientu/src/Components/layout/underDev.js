@@ -2,6 +2,7 @@ import React from "react";
 import Err from "../../Assets/img/error.svg";
 import "../Css/underDev.css";
 export default function UnderDev() {
+  // dành cho mấy trang đang thực hiện
   return (
     <div className="page__maintance">
       <img className="error-logo" src={Err} />

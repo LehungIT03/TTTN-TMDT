@@ -3,7 +3,9 @@ import { Link } from "react-router-dom";
 import { FaShoppingCart, FaSpinner } from "react-icons/fa";
 
 export default function ProductGrid({ products, isLoading, error, addToCart }) {
+  // xử lý lỗi sản phẩm
   if (error) return <div className="error-message">{error}</div>;
+
   if (isLoading)
     return (
       <div className="loading-spinner">

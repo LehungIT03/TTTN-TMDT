@@ -7,12 +7,12 @@ const app = express();
 
 app.use(bodyParser.json());
 dotenv.config();
-
-const PORT = process.env.PORT || 7000;
+//lấy port và URL từ file ENVENV
+const PORT = process.env.PORT || 8000;
 const MONGOURL = process.env.MONGO_URL;
-
+// kết nối tới cơ sở dữ liệu
 mongoose
-  .connect(MONGOUR)
+  .connect(MONGOURL)
   .then(() => {
     console.log("Connected to MongoDB successfully");
     app.listen(PORT, () => {

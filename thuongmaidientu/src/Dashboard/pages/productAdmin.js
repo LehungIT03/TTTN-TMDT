@@ -1,19 +1,42 @@
 import React, { useState, useEffect } from "react";
-import { products as initialProducts } from "../../data/products";
-import Sidebar from "../../Components/layout/sidebar";
+
+import Sidebar from "./sidebar";
+import axios from "axios";
 import "../Assets/productAdmin.css";
+import { set } from "mongoose";
 const ProductManager = () => {
   const itemsPerPage = 10;
   const [currentPage, setCurrentPage] = useState(1);
-  const [products, setProducts] = useState(initialProducts);
+  const [products, setProducts] = useState([]);
+  const [totalPages, setTotalPages] = useState(1);
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:8000/api/product?page=${currentPage}`
+        );
+        if (Array.isArray(response.data.product)) {
+          setProducts(response.data.product);
+          setTotalPages(response.data.pages);
+        } else {
+          console.error(
+            "Dữ liệu không phải là một mảng:",
+            response.data.product
+          );
+        }
+      } catch (error) {
+        console.error("Lỗi khi tải sản phẩm:", error);
+      }
+    };
+    fetchProducts();
+  }, [currentPage]);
+
   const [editingProduct, setEditingProduct] = useState(null); // Lưu sản phẩm đang chỉnh sửa
 
-  const totalPages = Math.ceil(products.length / itemsPerPage);
-
-  const currentProducts = products.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
+  // const currentProducts = products.slice(
+  //   (currentPage - 1) * itemsPerPage,
+  //   currentPage * itemsPerPage
+  // );
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -43,26 +66,23 @@ const ProductManager = () => {
         <table>
           <thead>
             <tr>
-              <th>ID</th>
               <th>Tên sản phẩm</th>
               <th>Giá</th>
               <th>Hình ảnh</th>
               <th>Loại</th>
-              <th>Số lượng</th>
+
               <th></th>
             </tr>
           </thead>
           <tbody>
-            {currentProducts.map((product) => (
-              <tr key={product.id}>
-                <td>{product.id}</td>
+            {products.map((product) => (
+              <tr key={product._id}>
                 <td>{product.name}</td>
                 <td>{product.price.toLocaleString()} VNĐ</td>
                 <td>
                   <img src={product.image} alt={product.name} width="50" />
                 </td>
                 <td>{product.category}</td>
-                <td>{product.inventory}</td>
                 <td>
                   <button
                     className="edit-btn"

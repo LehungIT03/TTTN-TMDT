@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { users } from "../../data/userData";
 import { products } from "../../data/products";
 import "../Assets/dashboard.css";
-import Sidebar from "../../Components/layout/sidebar";
+import Sidebar from "./sidebar";
 
 const Dashboard = () => {
   // Simulating logged-in user - In real app, this would come from authentication

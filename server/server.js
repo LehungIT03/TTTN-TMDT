@@ -1,24 +1,22 @@
 import express from "express";
-import mongoose from "mongoose";
-import bodyParser from "body-parser";
+import connectDatabase from "./config/mogodb.js";
 import dotenv from "dotenv";
+import ProductRoute from "./routes/productRoute.js";
+import cors from "cors";
+import { errorHandler, notFound } from "./middleWare/error.js";
+
+dotenv.config();
+
+connectDatabase();
 
 const app = express();
+app.use(express.json());
+app.use(cors());
 
-app.use(bodyParser.json());
-dotenv.config();
-//lấy port và URL từ file ENVENV
+//API
+app.use("/api/product", ProductRoute);
+//lấy port và URL từ file ENV
+app.use(notFound);
+app.use(errorHandler);
 const PORT = process.env.PORT || 8000;
-const MONGOURL = process.env.MONGO_URL;
-// kết nối tới cơ sở dữ liệu
-mongoose
-  .connect(MONGOURL)
-  .then(() => {
-    console.log("Connected to MongoDB successfully");
-    app.listen(PORT, () => {
-      console.log(`Server is running on port ${PORT}`);
-    });
-  })
-  .catch((err) => {
-    console.error("Error connecting to MongoDB:", err);
-  });
+app.listen(PORT, console.log(`Server is running on port ${PORT}`));

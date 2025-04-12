@@ -1,5 +1,5 @@
 import React from "react";
-import "../Css/sidebar.css";
+import "../../Components/Css/sidebar.css";
 import { Link } from "react-router-dom";
 
 const Sidebar = () => {
@@ -11,7 +11,7 @@ const Sidebar = () => {
           <Link to="/dashboard">Thống kê</Link>
         </li>
         <li>
-          <Link to="/productAdmin">Quản lý sản phẩm</Link>
+          <Link to="/api/products">Quản lý sản phẩm</Link>
         </li>
         <li>
           <Link to="/orderAdmin">Quản lý đơn hàng</Link>

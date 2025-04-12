@@ -45,7 +45,7 @@ function App() {
                 }
               />
               <Route
-                path="/productAdmin"
+                path="/api/products"
                 element={
                   <ProtectedRoute requireAdmin={true}>
                     <ProductAdmin />
